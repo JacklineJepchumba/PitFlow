@@ -7,7 +7,6 @@ PitFlow is a software platform that makes pit-latrine emptying in urban slums bo
 ![Status](https://img.shields.io/badge/status-prototype-orange)
 ![Python](https://img.shields.io/badge/python-3.11+-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Built for](https://img.shields.io/badge/built%20for-San%20Tech%20Hackathon%202026-purple)
 
 ---
 
@@ -126,14 +125,6 @@ The demo walks the full chain in about three minutes:
 
 **Data note:** all demo data is simulated and labelled as such. Map layers use open data (OpenStreetMap).
 
-## Alignment with the hackathon focus areas
-
-| Focus area | How PitFlow meets it |
-|---|---|
-| Low-cost, scalable | No new hardware; works on basic phones over USSD |
-| Waste-to-resource | Verifies and tracks treated output so it can be sold |
-| Hygiene, safety and accessibility | Fewer illegal dumps; households get proof of safe disposal |
-| Non-container | Works with existing pits and fixed treatment sites |
 
 ## Business model
 
@@ -158,10 +149,7 @@ The demo walks the full chain in about three minutes:
 - A real pilot needs access to an approved treatment site and an emptier group.
 - Current stage: ideation with a working software prototype, not piloted.
 
-## Author
 
-**Jackline Jepchumba**: Computer Science student, Data & AI Product Engineering.
-[LinkedIn](https://www.linkedin.com/in/jackline-kiptum-b4a23b2a8/)
 
 ## License
 
