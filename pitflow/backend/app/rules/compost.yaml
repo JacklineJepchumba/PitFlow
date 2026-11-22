@@ -1,0 +1,7 @@
+# EXAMPLE compliance rule. The numbers below are placeholders for the demo.
+# Replace with thresholds confirmed by the treatment operator and applicable
+# Kenyan / WHO guidance before any real use.
+product: compost
+min_days: 60
+min_temperature_c: 55
+min_days_at_temperature: 3
