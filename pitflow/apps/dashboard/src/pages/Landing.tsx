@@ -384,14 +384,19 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Who uses what */}
-      <section className="border-y border-ink/10 bg-[#f0ebe1]/80 px-5 py-16 md:px-10">
+      {/* Who — deep moss, horizontal role rows (not cards) */}
+      <section className="bg-[#0f3d2e] px-5 py-20 text-white md:px-10">
         <div className="mx-auto max-w-6xl">
-          <h2 className="font-display text-3xl font-bold text-ink">Who does what</h2>
-          <p className="mt-2 max-w-xl text-muted-foreground">
-            Three roles, three surfaces — hover or tap a card for the job to-do.
-          </p>
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
+          <div className="max-w-xl">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-200/80">
+              Roles
+            </p>
+            <h2 className="mt-2 font-display text-3xl font-bold md:text-4xl">Who does what</h2>
+            <p className="mt-2 text-white/65">
+              Three roles, three surfaces — expand a row to see the job list.
+            </p>
+          </div>
+          <div className="mt-10 space-y-3">
             {[
               {
                 icon: Smartphone,
@@ -412,29 +417,36 @@ export default function Landing() {
                 tasks: ["Today stats", "Stop checklist", "Log compost kg"],
               },
             ].map((card, i) => (
-              <motion.article
+              <motion.details
                 key={card.role}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, x: 12 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-                whileHover={{ y: -4 }}
-                className="group rounded-2xl border border-ink/10 bg-white/90 p-5 shadow-sm transition hover:border-moss/40 hover:shadow-md"
+                transition={{ delay: i * 0.06 }}
+                open={i === 0}
+                className="group overflow-hidden rounded-2xl border border-white/15 bg-white/5 open:bg-white/10"
               >
-                <card.icon className="h-6 w-6 text-moss" />
-                <h3 className="mt-3 font-display text-xl font-bold text-ink">{card.role}</h3>
-                <p className="text-sm text-muted-foreground">{card.tool}</p>
-                <ul className="mt-4 space-y-2 text-sm text-ink/80">
+                <summary className="flex cursor-pointer list-none items-center gap-4 px-5 py-4 [&::-webkit-details-marker]:hidden">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-400/20 text-amber-200">
+                    <card.icon className="h-5 w-5" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-display text-xl font-bold">{card.role}</span>
+                    <span className="text-sm text-white/55">{card.tool}</span>
+                  </span>
+                  <ChevronRight className="h-4 w-4 shrink-0 text-white/40 transition group-open:rotate-90" />
+                </summary>
+                <ul className="grid gap-2 border-t border-white/10 px-5 py-4 sm:grid-cols-3">
                   {card.tasks.map((t) => (
                     <li
                       key={t}
-                      className="rounded-lg bg-moss/5 px-3 py-2 transition group-hover:bg-moss/10"
+                      className="rounded-xl bg-[#0a2a20] px-3 py-3 text-sm text-white/85"
                     >
                       {t}
                     </li>
                   ))}
                 </ul>
-              </motion.article>
+              </motion.details>
             ))}
           </div>
         </div>
