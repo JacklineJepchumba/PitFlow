@@ -1,13 +1,16 @@
 """Tamper-evident, hash-chained event log.
 
-Each event stores the hash of the previous event. Editing or removing any
-past event breaks every hash after it, so verify() detects it.
-In-memory for now; persistence to Postgres comes later.
+In-memory EventLog kept for unit tests. PersistedEventLog writes to Postgres.
 """
+from __future__ import annotations
+
 import hashlib
 import json
 import time
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
+
+from sqlalchemy.orm import Session
 
 GENESIS_HASH = "0" * 64
 
@@ -58,3 +61,24 @@ class EventLog:
                 return False
             prev_hash = e.hash
         return True
+
+
+def append_event(session: Session, kind: str, payload: dict) -> "app.models.Event":
+    from app.models import Event as EventRow
+
+    last = (
+        session.query(EventRow).order_by(EventRow.id.desc()).first()
+    )
+    prev_hash = last.hash if last else GENESIS_HASH
+    ts = time.time()
+    digest = compute_hash(prev_hash, kind, payload, ts)
+    row = EventRow(
+        kind=kind,
+        payload=payload,
+        prev_hash=prev_hash,
+        hash=digest,
+        created_at=datetime.fromtimestamp(ts, tz=timezone.utc),
+    )
+    session.add(row)
+    session.flush()
+    return row

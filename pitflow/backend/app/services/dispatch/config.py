@@ -1,0 +1,7 @@
+"""Dispatch payment constants (KES). SAMPLE demo rates only."""
+
+BASE_PAYMENT_KES = 300
+PER_STOP_KES = 100
+CLUSTER_RADIUS_M = 800
+MAX_STOPS_PER_TRIP = 6
+OVERDUE_DAYS = 14
