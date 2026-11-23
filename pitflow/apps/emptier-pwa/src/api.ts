@@ -9,7 +9,7 @@ export type Auth = {
 
 export function getAuth(): Auth | null {
   const raw = localStorage.getItem("pitflow_cw_auth");
-  return raw ? JSON.parse(raw) : null;
+  return raw ? (JSON.parse(raw) as Auth) : null;
 }
 
 export function setAuth(auth: Auth | null) {
@@ -17,24 +17,38 @@ export function setAuth(auth: Auth | null) {
   else localStorage.removeItem("pitflow_cw_auth");
 }
 
-async function request<T>(path: string, opts: RequestInit = {}): Promise<T> {
+async function parseError(res: Response) {
+  const text = await res.text();
+  try {
+    const j = JSON.parse(text);
+    return j.detail || text || res.statusText;
+  } catch {
+    return text || res.statusText;
+  }
+}
+
+async function request<T>(path: string, opts: RequestInit = {}, auth = true): Promise<T> {
   const headers = new Headers(opts.headers || {});
-  const a = getAuth();
-  if (a) headers.set("Authorization", `Bearer ${a.access_token}`);
+  if (auth) {
+    const a = getAuth();
+    if (!a) throw new Error("Please sign in again");
+    headers.set("Authorization", `Bearer ${a.access_token}`);
+  }
   if (opts.body && !headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
   }
   const res = await fetch(`${API}${path}`, { ...opts, headers });
-  if (!res.ok) throw new Error(await res.text());
+  if (!res.ok) throw new Error(await parseError(res));
   return res.json();
 }
 
 export const api = {
   login: (phone: string, password: string) =>
-    request<Auth>("/auth/login", {
-      method: "POST",
-      body: JSON.stringify({ phone, password }),
-    }),
+    request<Auth>(
+      "/auth/login",
+      { method: "POST", body: JSON.stringify({ phone, password }) },
+      false
+    ),
   trips: () => request<any[]>("/trips"),
   patchStop: (tripId: number, stopId: number, body: object) =>
     request(`/trips/${tripId}/stops/${stopId}`, {

@@ -2,7 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --field: #0f3d2e;
+  --leaf: #2f7a5b;
+  --chalk: #e8e2d6;
+  --sun: #e8a54b;
+}
+
 body {
   margin: 0;
   font-family: "IBM Plex Sans", system-ui, sans-serif;
+  background: var(--chalk);
+  background-image:
+    radial-gradient(ellipse 80% 40% at 50% -10%, rgba(47, 122, 91, 0.14), transparent),
+    linear-gradient(180deg, #ebe5d8 0%, #e0d8c8 100%);
+  color: var(--field);
+  min-height: 100vh;
+}
+
+.tap {
+  min-height: 52px;
+  font-size: 1rem;
+  font-weight: 600;
 }

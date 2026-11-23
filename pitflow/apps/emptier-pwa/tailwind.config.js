@@ -3,13 +3,11 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      fontFamily: {
-        display: ['"IBM Plex Sans"', "system-ui", "sans-serif"],
-      },
       colors: {
         field: "#0f3d2e",
-        leaf: "#3d8b6e",
-        chalk: "#f3f7f4",
+        leaf: "#2f7a5b",
+        chalk: "#e8e2d6",
+        sun: "#e8a54b",
       },
     },
   },
