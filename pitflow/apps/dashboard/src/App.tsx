@@ -1,5 +1,7 @@
-import { Link, Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Link, Navigate, NavLink, Route, Routes, useNavigate } from "react-router-dom";
 import { getAuth, setAuth } from "./api";
+import { Button } from "@/components/ui/button";
+import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import MapPage from "./pages/MapPage";
 import TripsPage from "./pages/TripsPage";
@@ -7,33 +9,53 @@ import CompostPage from "./pages/CompostPage";
 import PaymentsPage from "./pages/PaymentsPage";
 import SimulatorPage from "./pages/SimulatorPage";
 
+const nav = [
+  { to: "/app/map", label: "Map" },
+  { to: "/app/trips", label: "Trips" },
+  { to: "/app/compost", label: "Compost" },
+  { to: "/app/payments", label: "Payments" },
+  { to: "/app/simulator", label: "Simulator" },
+];
+
 function Shell({ children }: { children: React.ReactNode }) {
   const auth = getAuth();
-  const nav = useNavigate();
-  if (!auth) return <Navigate to="/login" replace />;
+  const navigate = useNavigate();
+  if (!auth || auth.role !== "admin") return <Navigate to="/login" replace />;
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sand via-white to-sand">
-      <header className="border-b border-moss/20 bg-white/80 backdrop-blur">
+    <div className="min-h-screen">
+      <header className="sticky top-0 z-30 border-b bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-          <div>
-            <p className="font-display text-xl font-bold text-moss">PitFlow</p>
-            <p className="text-xs text-ink/60">Admin · SAMPLE DATA only</p>
-          </div>
-          <nav className="flex flex-wrap gap-3 text-sm font-semibold">
-            <Link to="/">Map</Link>
-            <Link to="/trips">Trips</Link>
-            <Link to="/compost">Compost</Link>
-            <Link to="/payments">Payments</Link>
-            <Link to="/simulator">Simulator</Link>
-            <button
-              className="text-clay"
+          <Link to="/" className="font-display text-xl font-bold text-moss">
+            PitFlow
+            <span className="ml-2 text-xs font-sans font-medium text-muted-foreground">
+              Admin · SAMPLE
+            </span>
+          </Link>
+          <nav className="flex flex-wrap items-center gap-1">
+            {nav.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) =>
+                  `rounded-md px-3 py-2 text-sm font-semibold ${
+                    isActive ? "bg-secondary text-ink" : "text-muted-foreground hover:bg-secondary/70"
+                  }`
+                }
+              >
+                {item.label}
+              </NavLink>
+            ))}
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => {
                 setAuth(null);
-                nav("/login");
+                navigate("/login");
               }}
             >
               Log out
-            </button>
+            </Button>
           </nav>
         </div>
       </header>
@@ -45,12 +67,15 @@ function Shell({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <Routes>
+      <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/" element={<Shell><MapPage /></Shell>} />
-      <Route path="/trips" element={<Shell><TripsPage /></Shell>} />
-      <Route path="/compost" element={<Shell><CompostPage /></Shell>} />
-      <Route path="/payments" element={<Shell><PaymentsPage /></Shell>} />
-      <Route path="/simulator" element={<Shell><SimulatorPage /></Shell>} />
+      <Route path="/app/map" element={<Shell><MapPage /></Shell>} />
+      <Route path="/app/trips" element={<Shell><TripsPage /></Shell>} />
+      <Route path="/app/compost" element={<Shell><CompostPage /></Shell>} />
+      <Route path="/app/payments" element={<Shell><PaymentsPage /></Shell>} />
+      <Route path="/app/simulator" element={<Shell><SimulatorPage /></Shell>} />
+      <Route path="/app" element={<Navigate to="/app/map" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
