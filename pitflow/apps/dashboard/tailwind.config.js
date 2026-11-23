@@ -7,6 +7,7 @@ export default {
       fontFamily: {
         display: ['"Fraunces"', "Georgia", "serif"],
         sans: ['"Figtree"', "system-ui", "sans-serif"],
+        mono: ['"Share Tech Mono"', "ui-monospace", "monospace"],
       },
       colors: {
         border: "hsl(var(--border))",
