@@ -6,7 +6,7 @@ export default {
       colors: {
         field: "#0f3d2e",
         leaf: "#2f7a5b",
-        chalk: "#f4f1ea",
+        chalk: "#e8e2d6",
         sun: "#e8a54b",
       },
     },
