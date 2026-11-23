@@ -16,15 +16,35 @@ Software for worm-and-charcoal sanitation units beside shared pit toilets in inf
 
 | Layer | Tools |
 |---|---|
-| Backend | Python 3.11, FastAPI, SQLAlchemy 2, GeoAlchemy2, Alembic |
-| Database | PostgreSQL + PostGIS (local or hosted; set `DATABASE_URL`) |
+| Backend | Python 3.11, FastAPI, SQLAlchemy 2, Alembic |
+| Database | PostgreSQL (lon/lat floats; no PostGIS required) |
 | Routing | Google OR-Tools |
 | Messaging | Africa's Talking webhooks + local phone simulator |
 | Payments | Ledger records; M-Pesa Daraja behind `DARAJA_PAYOUTS_ENABLED` (default off) |
 | Admin UI | React + TypeScript + Vite + Tailwind + **shadcn/ui** + MapLibre + Framer Motion |
 | Care worker | Mobile-first React PWA (`apps/emptier-pwa`) — large tap targets, low chrome |
 
-## Apps
+## Live (Fly.io)
+
+| App | URL |
+|---|---|
+| API | https://pitflow-api.fly.dev/health |
+| Landing + admin | https://pitflow-web.fly.dev |
+| Care worker | https://pitflow-care.fly.dev |
+
+Redeploy from each app directory (`backend`, `apps/dashboard`, `apps/emptier-pwa`):
+
+```powershell
+fly deploy
+```
+
+Seed on the API machine after schema/seed changes:
+
+```powershell
+fly ssh console -a pitflow-api -C "python seed_demo.py"
+```
+
+## Apps (local)
 
 | App | URL (dev) | Who |
 |---|---|---|
@@ -43,15 +63,13 @@ SAMPLE logins after seed:
 
 ### 1. Database
 
-Install **PostgreSQL with PostGIS**. Create a database and set `DATABASE_URL` in `backend/.env`.
+Install **PostgreSQL**. Create a database and set `DATABASE_URL` in `backend/.env`.
 
 ```text
 DATABASE_URL=postgresql+psycopg2://pitflow:pitflow@localhost:5432/pitflow
 ```
 
-```sql
-CREATE EXTENSION IF NOT EXISTS postgis;
-```
+Sites/units store plain `lon` / `lat` floats (MapLibre). PostGIS is not required.
 
 ### 2. Backend
 
