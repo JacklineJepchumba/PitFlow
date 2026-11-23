@@ -17,7 +17,7 @@ Software for worm-and-charcoal sanitation units beside shared pit toilets in inf
 | Layer | Tools |
 |---|---|
 | Backend | Python 3.11, FastAPI, SQLAlchemy 2, GeoAlchemy2, Alembic |
-| Database | PostgreSQL + PostGIS (`docker compose`) |
+| Database | PostgreSQL + PostGIS (local install; set `DATABASE_URL`) |
 | Routing | Google OR-Tools |
 | Messaging | Africa's Talking webhooks + local simulator |
 | Payments | Ledger records; M-Pesa Daraja sandbox behind `DARAJA_PAYOUTS_ENABLED` (default off) |
@@ -27,9 +27,18 @@ Software for worm-and-charcoal sanitation units beside shared pit toilets in inf
 
 ### 1. Database
 
-```bash
-cd pitflow
-docker compose up -d
+Install **PostgreSQL with PostGIS** on your machine (or use any hosted Postgres that has the PostGIS extension). Create a database, then set `DATABASE_URL` in `backend/.env`.
+
+Default expected by `.env.example`:
+
+```text
+DATABASE_URL=postgresql+psycopg2://pitflow:pitflow@localhost:5432/pitflow
+```
+
+Enable PostGIS once (as a superuser):
+
+```sql
+CREATE EXTENSION IF NOT EXISTS postgis;
 ```
 
 ### 2. Backend
@@ -40,6 +49,7 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 Copy-Item ..\.env.example .env
+# edit .env DATABASE_URL if your Postgres user/db differ
 alembic upgrade head
 python ..\scripts\seed_demo.py
 uvicorn app.main:app --reload --port 8001
@@ -51,6 +61,7 @@ cd backend
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 cp ../.env.example .env
+# edit .env DATABASE_URL if your Postgres user/db differ
 alembic upgrade head
 python ../scripts/seed_demo.py
 uvicorn app.main:app --reload --port 8001
@@ -114,8 +125,7 @@ pitflow/
 ├── backend/           # FastAPI + Alembic
 ├── apps/dashboard/    # Admin map / trips / payments / simulator
 ├── apps/emptier-pwa/  # Care worker PWA
-├── scripts/seed_demo.py
-└── docker-compose.yml
+└── scripts/seed_demo.py
 ```
 
 ## Limitations
