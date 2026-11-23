@@ -452,18 +452,34 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Built for the lane — keep existing flavour */}
-      <section id="how" className="mx-auto max-w-6xl px-5 py-16 md:px-10">
-        <div className="space-y-6">
-          <h2 className="font-display text-3xl font-bold text-ink">
-            Built for the lane, not the boardroom
-          </h2>
-          <p className="max-w-2xl text-muted-foreground">
-            Imagine Amina finishing a stop in Mathare: sun on the yard, prepaid data, thumb on
-            a big “Mark visited” button. Admin tools exist so her supervisor can see red units
-            early and pay her when the round is done.
-          </p>
-          <ul className="grid gap-4 md:grid-cols-3">
+      {/* Lane story — pale chalk, numbered timeline (not cards) */}
+      <section
+        id="how"
+        className="border-y border-ink/10 bg-[#f7f3ea] px-5 py-20 md:px-10"
+        style={{
+          backgroundImage:
+            "radial-gradient(ellipse 50% 40% at 100% 0%, rgba(31,92,69,0.08), transparent)",
+        }}
+      >
+        <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
+          <div className="lg:sticky lg:top-24">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-moss">Field story</p>
+            <h2 className="mt-2 font-display text-3xl font-bold text-ink md:text-4xl">
+              Built for the lane, not the boardroom
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              Imagine Amina finishing a stop in Mathare: sun on the yard, prepaid data, thumb on
+              a big “Mark visited” button. Admin tools exist so her supervisor can see red units
+              early and pay her when the round is done.
+            </p>
+            <Button asChild className="mt-6" variant="accent">
+              <Link to="/login">
+                Try the SAMPLE loop <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+
+          <ol className="relative space-y-0 border-l-2 border-moss/30 pl-6">
             {[
               {
                 icon: MessageSquare,
@@ -483,18 +499,25 @@ export default function Landing() {
             ].map((item, i) => (
               <motion.li
                 key={item.title}
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, x: 10 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-                className="rounded-2xl border border-ink/10 bg-[#f0ebe1] p-5"
+                transition={{ delay: i * 0.1 }}
+                className="relative pb-10 last:pb-0"
               >
-                <item.icon className="h-5 w-5 text-moss" />
-                <p className="mt-3 font-semibold text-ink">{item.title}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{item.body}</p>
+                <span className="absolute -left-[1.9rem] flex h-8 w-8 items-center justify-center rounded-full bg-moss text-xs font-bold text-white">
+                  {i + 1}
+                </span>
+                <div className="rounded-2xl border border-ink/10 bg-white/80 p-5 shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <item.icon className="h-5 w-5 text-moss" />
+                    <p className="font-display text-lg font-bold text-ink">{item.title}</p>
+                  </div>
+                  <p className="mt-2 text-sm text-muted-foreground">{item.body}</p>
+                </div>
               </motion.li>
             ))}
-          </ul>
+          </ol>
         </div>
       </section>
 
