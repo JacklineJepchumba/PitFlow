@@ -4,7 +4,6 @@ pydantic-settings>=2.2
 sqlalchemy>=2.0
 alembic>=1.13
 psycopg2-binary>=2.9
-geoalchemy2>=0.14
 ortools>=9.9
 pyyaml>=6.0
 qrcode[pil]>=7.4

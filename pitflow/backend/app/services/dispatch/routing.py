@@ -6,7 +6,6 @@ from math import asin, cos, radians, sin, sqrt
 from typing import Any
 
 from ortools.constraint_solver import pywrapcp, routing_enums_pb2
-from sqlalchemy import text
 from sqlalchemy.orm import Session, joinedload
 
 from app.models import Job, Trip, TripStop, Unit, User
@@ -32,16 +31,15 @@ def haversine_m(lon1: float, lat1: float, lon2: float, lat2: float) -> float:
 
 
 def _coords(session: Session, unit_id: int) -> tuple[float, float]:
-    row = session.execute(
-        text(
-            "SELECT ST_X(location::geometry) AS lon, ST_Y(location::geometry) AS lat "
-            "FROM sites s JOIN units u ON u.site_id = s.id WHERE u.id = :uid"
-        ),
-        {"uid": unit_id},
-    ).mappings().first()
-    if not row:
+    from app.models import Site, Unit
+
+    unit = session.get(Unit, unit_id)
+    if unit is None:
         raise ValueError(f"No coordinates for unit {unit_id}")
-    return float(row["lon"]), float(row["lat"])
+    site = session.get(Site, unit.site_id)
+    if site is None:
+        raise ValueError(f"No coordinates for unit {unit_id}")
+    return float(site.lon), float(site.lat)
 
 
 def open_jobs_needing_visit(session: Session) -> list[Job]:

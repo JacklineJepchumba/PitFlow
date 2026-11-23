@@ -39,7 +39,8 @@ class Settings(BaseSettings):
     # Comma-separated browser origins for the two Vite apps
     cors_origins: str = (
         "http://localhost:5173,http://localhost:5174,"
-        "http://127.0.0.1:5173,http://127.0.0.1:5174"
+        "http://127.0.0.1:5173,http://127.0.0.1:5174,"
+        "https://pitflow-web.fly.dev,https://pitflow-care.fly.dev"
     )
 
     # JWT auth (demo secret — replace for any real deploy)
@@ -50,6 +51,16 @@ class Settings(BaseSettings):
     @property
     def cors_origin_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
+
+    @property
+    def sqlalchemy_database_url(self) -> str:
+        """Normalize Fly/Heroku postgres:// URLs to psycopg2 for SQLAlchemy."""
+        url = self.database_url
+        if url.startswith("postgres://"):
+            url = "postgresql+psycopg2://" + url[len("postgres://") :]
+        elif url.startswith("postgresql://") and "+" not in url.split("://", 1)[0]:
+            url = "postgresql+psycopg2://" + url[len("postgresql://") :]
+        return url
 
 
 settings = Settings()

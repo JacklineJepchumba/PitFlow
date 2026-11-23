@@ -3,7 +3,6 @@ from __future__ import annotations
 from datetime import date, datetime
 from typing import Optional
 
-from geoalchemy2 import Geography
 from sqlalchemy import (
     Boolean,
     CheckConstraint,
@@ -48,7 +47,8 @@ class Site(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     area: Mapped[str] = mapped_column(String(120), nullable=False)
-    location = mapped_column(Geography(geometry_type="POINT", srid=4326), nullable=False)
+    lon: Mapped[float] = mapped_column(Float, nullable=False)
+    lat: Mapped[float] = mapped_column(Float, nullable=False)
     notes: Mapped[Optional[str]] = mapped_column(Text)
 
     units: Mapped[list[Unit]] = relationship(back_populates="site")

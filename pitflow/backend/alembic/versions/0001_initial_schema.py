@@ -9,7 +9,6 @@ from typing import Sequence, Union
 
 import sqlalchemy as sa
 from alembic import op
-from geoalchemy2 import Geography
 from sqlalchemy.dialects import postgresql
 
 revision: str = "0001"
@@ -19,8 +18,6 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    op.execute("CREATE EXTENSION IF NOT EXISTS postgis")
-
     op.create_table(
         "users",
         sa.Column("id", sa.Integer(), primary_key=True),
@@ -42,11 +39,8 @@ def upgrade() -> None:
         sa.Column("id", sa.Integer(), primary_key=True),
         sa.Column("name", sa.String(120), nullable=False),
         sa.Column("area", sa.String(120), nullable=False),
-        sa.Column(
-            "location",
-            Geography(geometry_type="POINT", srid=4326),
-            nullable=False,
-        ),
+        sa.Column("lon", sa.Float(), nullable=False),
+        sa.Column("lat", sa.Float(), nullable=False),
         sa.Column("notes", sa.Text()),
     )
 

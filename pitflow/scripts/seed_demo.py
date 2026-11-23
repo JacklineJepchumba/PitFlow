@@ -10,12 +10,20 @@ import sys
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
-from geoalchemy2.elements import WKTElement
 from sqlalchemy import text
 
-# Allow `python ../scripts/seed_demo.py` from backend/
-BACKEND = Path(__file__).resolve().parents[1] / "backend"
-sys.path.insert(0, str(BACKEND))
+# Allow local `python ../scripts/seed_demo.py` and Fly `python seed_demo.py`
+_HERE = Path(__file__).resolve().parent
+_CANDIDATES = [
+    _HERE.parent / "backend",  # repo: pitflow/scripts → pitflow/backend
+    _HERE,  # container: /app/seed_demo.py next to app/
+]
+for _path in _CANDIDATES:
+    if (_path / "app").is_dir():
+        sys.path.insert(0, str(_path))
+        break
+else:
+    sys.path.insert(0, str(_HERE.parent / "backend"))
 
 from app.db import SessionLocal, engine  # noqa: E402
 from app.models import Caretaker, Reading, Site, Unit, User  # noqa: E402
@@ -47,11 +55,6 @@ CARETAKERS = [
 ]
 
 
-def ensure_postgis(session) -> None:
-    session.execute(text("CREATE EXTENSION IF NOT EXISTS postgis"))
-    session.commit()
-
-
 def upsert_users(session) -> dict[str, User]:
     by_phone = {}
     for name, phone, role, password in USERS:
@@ -81,7 +84,7 @@ def upsert_sites_units(session) -> list[Unit]:
             site = Site(
                 name=name,
                 area=area,
-                location=WKTElement(f"POINT({lon} {lat})", srid=4326),
+                lon=lon, lat=lat,
                 notes=SAMPLE_NOTE,
             )
             session.add(site)
@@ -171,7 +174,6 @@ def main() -> None:
     print("PitFlow seed — SAMPLE DATA only")
     session = SessionLocal()
     try:
-        ensure_postgis(session)
         upsert_users(session)
         units = upsert_sites_units(session)
         sites = session.query(Site).order_by(Site.id).all()
@@ -195,3 +197,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
