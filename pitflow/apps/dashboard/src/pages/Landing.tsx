@@ -127,8 +127,10 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-[#e6dfd2]">
-      <header className="absolute inset-x-0 top-0 z-20 flex items-center justify-between px-5 py-5 md:px-10">
-        <p className="font-display text-2xl font-bold text-white drop-shadow">PitFlow</p>
+      <header className="sticky top-0 z-40 flex items-center justify-between border-b border-white/10 bg-[#14241e]/90 px-5 py-4 backdrop-blur-md md:px-10">
+        <a href="#" className="font-display text-2xl font-bold text-white">
+          PitFlow
+        </a>
         <div className="flex gap-2">
           <Button
             asChild
