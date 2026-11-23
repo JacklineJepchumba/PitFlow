@@ -151,15 +151,15 @@ export default function Landing() {
         </div>
       </header>
 
-      {/* Hero — keep lean */}
-      <section className="relative min-h-[92vh] overflow-hidden">
+      {/* Hero — full viewport */}
+      <section className="relative flex min-h-[calc(100svh-4.25rem)] overflow-hidden">
         <img
           src="/images/hero-care-worker.jpg"
           alt="Care worker beside a Pit Sidecar sanitation unit in a Nairobi settlement"
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/45 to-ink/25" />
-        <div className="relative z-10 flex min-h-[92vh] max-w-3xl flex-col justify-end px-5 pb-16 pt-28 md:px-10">
+        <div className="relative z-10 flex w-full max-w-3xl flex-col justify-end px-5 pb-16 pt-20 md:px-10">
           <motion.p
             {...fade}
             transition={{ duration: 0.45 }}
@@ -308,36 +308,55 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Interactive status board */}
-      <section id="levels" className="mx-auto max-w-6xl px-5 py-16 md:px-10">
-        <div className="grid gap-10 md:grid-cols-2 md:items-center">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-moss">
+      {/* Levels — clay band, image-led split (photo left) */}
+      <section
+        id="levels"
+        className="border-y border-clay/20 bg-gradient-to-br from-[#c45c26]/15 via-[#e8d5c4] to-[#d4b896] px-5 py-20 md:px-10"
+      >
+        <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-2 md:items-stretch">
+          <motion.div
+            initial={{ opacity: 0, x: -16 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="relative overflow-hidden rounded-[2rem] shadow-lg"
+          >
+            <img
+              src="/images/status-board.jpg"
+              alt="Handmade green amber red status board for unit fill levels"
+              className="h-full min-h-[22rem] w-full object-cover md:min-h-full"
+            />
+            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/80 to-transparent p-5">
+              <p className="text-xs font-bold uppercase tracking-wider text-amber-200">
+                Yard status board
+              </p>
+              <p className="font-display text-xl font-bold text-white">Green · Amber · Red</p>
+            </div>
+          </motion.div>
+
+          <div className="flex flex-col justify-center rounded-[2rem] bg-[#1a2e26] p-6 text-white shadow-lg md:p-8">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-amber-200/90">
               Status language
             </p>
-            <h2 className="mt-2 font-display text-3xl font-bold text-ink">
-              Tap a fill level
-            </h2>
-            <p className="mt-2 text-muted-foreground">
-              Caretakers send <code className="rounded bg-ink/10 px-1">UNIT LEVEL</code>. Level
+            <h2 className="mt-2 font-display text-3xl font-bold">Tap a fill level</h2>
+            <p className="mt-2 text-white/65">
+              Caretakers send <code className="rounded bg-white/10 px-1">UNIT LEVEL</code>. Level
               maps straight to the pin colour supervisors watch.
             </p>
-            <div className="mt-6 flex flex-wrap gap-3">
+            <div className="mt-6 grid grid-cols-3 gap-2">
               {LEVELS.map((l, i) => (
                 <button
                   key={l.key}
                   type="button"
                   onClick={() => setLevel(i)}
-                  className={`flex items-center gap-2 rounded-2xl border bg-[#f0ebe1] px-4 py-3 transition ${
+                  className={`rounded-2xl px-2 py-4 text-center transition ${
                     level === i
-                      ? `ring-2 ${l.ring} border-transparent`
-                      : "border-ink/10 hover:border-ink/25"
+                      ? "bg-white text-ink shadow-md"
+                      : "bg-white/10 text-white/80 hover:bg-white/15"
                   }`}
                 >
-                  <span className={`h-4 w-4 rounded-full ${l.color}`} />
-                  <span className="font-semibold text-ink">
-                    {l.key} · {l.name}
-                  </span>
+                  <span className={`mx-auto mb-2 block h-3 w-3 rounded-full ${l.color}`} />
+                  <span className="block text-xs font-bold">{l.key}</span>
+                  <span className="block text-[11px] opacity-70">{l.name}</span>
                 </button>
               ))}
             </div>
@@ -347,32 +366,21 @@ export default function Landing() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="mt-6 rounded-2xl border border-ink/10 bg-[#f0ebe1] p-5"
+                className="mt-6 rounded-2xl border border-white/15 bg-white/5 p-4"
               >
-                <p className="text-sm font-bold uppercase text-muted-foreground">
+                <p className="text-xs font-bold uppercase tracking-wide text-amber-200/80">
                   Map shows · {activeLevel.status}
                 </p>
-                <p className="mt-2 font-display text-2xl font-bold text-ink">
+                <p className="mt-1 font-display text-2xl font-bold">
                   Level {activeLevel.key} — {activeLevel.name}
                 </p>
-                <p className="mt-2 text-muted-foreground">{activeLevel.meaning}</p>
-                <p className="mt-4 font-mono text-sm text-moss">
+                <p className="mt-2 text-sm text-white/70">{activeLevel.meaning}</p>
+                <p className="mt-3 font-mono text-sm text-amber-100">
                   Example SMS: U014 {activeLevel.key}
                 </p>
               </motion.div>
             </AnimatePresence>
           </div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <img
-              src="/images/status-board.jpg"
-              alt="Handmade green amber red status board for unit fill levels"
-              className="h-80 w-full rounded-2xl object-cover shadow-md md:h-[28rem]"
-            />
-          </motion.div>
         </div>
       </section>
 
@@ -478,16 +486,22 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* FAQ accordion */}
-      <section id="faq" className="border-t border-ink/10 bg-[#14241e] px-5 py-16 text-white md:px-10">
-        <div className="mx-auto max-w-3xl">
-          <h2 className="font-display text-3xl font-bold">Questions</h2>
-          <p className="mt-2 text-white/60">Tap a question to expand.</p>
-          <ul className="mt-8 space-y-2">
+      {/* FAQ — side by side, full page */}
+      <section
+        id="faq"
+        className="flex min-h-[100svh] flex-col justify-center border-t border-ink/10 bg-[#14241e] px-5 py-16 text-white md:px-10"
+      >
+        <div className="mx-auto w-full max-w-6xl">
+          <h2 className="font-display text-3xl font-bold md:text-4xl">Questions</h2>
+          <p className="mt-2 text-white/60">Tap a question to expand — two columns on wide screens.</p>
+          <ul className="mt-8 grid gap-3 md:grid-cols-2">
             {FAQ.map((item, i) => {
               const open = openFaq === i;
               return (
-                <li key={item.q} className="overflow-hidden rounded-xl bg-white/5 ring-1 ring-white/10">
+                <li
+                  key={item.q}
+                  className="overflow-hidden rounded-xl bg-white/5 ring-1 ring-white/10"
+                >
                   <button
                     type="button"
                     className="flex w-full items-center justify-between gap-3 px-4 py-4 text-left font-semibold"
@@ -520,40 +534,110 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="px-5 py-14 md:px-10">
-        <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-6 rounded-3xl bg-moss px-6 py-10 text-white md:flex-row md:items-center md:px-10">
-          <div>
-            <h2 className="font-display text-2xl font-bold md:text-3xl">Walk the SAMPLE loop</h2>
-            <p className="mt-2 max-w-lg text-white/75">
-              Admin +254700000001 / admin123 · Care +254700000002 / care123
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <Button asChild size="lg" variant="accent">
+      <LandingFooter />
+    </div>
+  );
+}
+
+function LandingFooter() {
+  const [copied, setCopied] = useState<string | null>(null);
+  const careUrl = import.meta.env.VITE_CARE_URL || "http://localhost:5174";
+
+  async function copy(label: string, text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(label);
+      window.setTimeout(() => setCopied(null), 1800);
+    } catch {
+      setCopied("failed");
+    }
+  }
+
+  const jumps = [
+    { href: "#flow", label: "How it works" },
+    { href: "#levels", label: "Fill levels" },
+    { href: "#how", label: "Field story" },
+    { href: "#faq", label: "Questions" },
+  ];
+
+  return (
+    <footer className="border-t border-ink/10 bg-[#0f1c17] text-white">
+      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 md:grid-cols-[1.2fr_1fr_1fr] md:px-10">
+        <div>
+          <p className="font-display text-3xl font-bold">PitFlow</p>
+          <p className="mt-2 max-w-sm text-sm text-white/60">
+            Pit Sidecar idea-stage pilot — SAMPLE DATA only. From SMS report to paid care visit.
+          </p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            <Button asChild variant="accent">
               <Link to="/login">Admin login</Link>
             </Button>
             <Button
               asChild
-              size="lg"
               variant="outline"
-              className="border-white/40 bg-transparent text-white hover:bg-white/10"
+              className="border-white/30 bg-transparent text-white hover:bg-white/10"
             >
-              <a
-                href={import.meta.env.VITE_CARE_URL || "http://localhost:5174"}
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href={careUrl} target="_blank" rel="noreferrer">
                 Care worker
               </a>
             </Button>
           </div>
         </div>
-      </section>
 
-      <footer className="border-t border-ink/10 bg-[#e6dfd2] px-5 py-8 text-center text-sm text-muted-foreground md:px-10">
-        PitFlow / Pit Sidecar · idea-stage pilot · SAMPLE DATA only
-      </footer>
-    </div>
+        <div>
+          <p className="text-xs font-bold uppercase tracking-wider text-amber-200/80">On this page</p>
+          <ul className="mt-3 space-y-1">
+            {jumps.map((j) => (
+              <li key={j.href}>
+                <a
+                  href={j.href}
+                  className="group flex items-center justify-between rounded-lg px-2 py-2 text-sm text-white/70 transition hover:bg-white/5 hover:text-white"
+                >
+                  {j.label}
+                  <ChevronRight className="h-3.5 w-3.5 opacity-0 transition group-hover:opacity-100" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <p className="text-xs font-bold uppercase tracking-wider text-amber-200/80">
+            SAMPLE logins · tap to copy
+          </p>
+          <div className="mt-3 space-y-2">
+            {[
+              { label: "Admin phone", value: "+254700000001" },
+              { label: "Admin password", value: "admin123" },
+              { label: "Care phone", value: "+254700000002" },
+              { label: "Care password", value: "care123" },
+            ].map((row) => (
+              <button
+                key={row.label}
+                type="button"
+                onClick={() => void copy(row.label, row.value)}
+                className="flex w-full items-center justify-between rounded-xl bg-white/5 px-3 py-2.5 text-left text-sm ring-1 ring-white/10 transition hover:bg-white/10"
+              >
+                <span>
+                  <span className="block text-[10px] font-bold uppercase text-white/45">
+                    {row.label}
+                  </span>
+                  <span className="font-mono text-amber-100">{row.value}</span>
+                </span>
+                <span className="text-[10px] font-bold uppercase text-white/40">
+                  {copied === row.label ? "Copied" : "Copy"}
+                </span>
+              </button>
+            ))}
+          </div>
+          {copied === "failed" && (
+            <p className="mt-2 text-xs text-red-300">Clipboard blocked — copy manually.</p>
+          )}
+        </div>
+      </div>
+      <div className="border-t border-white/10 px-5 py-4 text-center text-xs text-white/40 md:px-10">
+        PitFlow / Pit Sidecar · idea-stage pilot · not production field data
+      </div>
+    </footer>
   );
 }
